@@ -1,10 +1,17 @@
-import moment from 'moment';
+import { ChakraProvider } from '@chakra-ui/react'
+import { HashRouter } from "react-router-dom";
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 
-import './index.css';
 import App from './App';
 
-moment.locale();
-
-ReactDOM.render(<App />, document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <React.StrictMode>
+    <ChakraProvider>
+      <HashRouter>
+        <App />
+      </HashRouter>
+    </ChakraProvider>
+  </React.StrictMode>
+);

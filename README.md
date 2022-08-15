@@ -1,5 +1,5 @@
 # Quickfita
 
-*Simple frontend for 2embed.to*
+*A simple app to browse movies and TV shows, linking them to other apps*
 
-<description>
+This is a simple webapp to quickly search for movies and TV shows, linking them to external sites.
