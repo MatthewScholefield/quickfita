@@ -1,0 +1,3 @@
+[submodule "libs/docker-compose-jsonnet"]
+	path = libs/docker-compose-jsonnet
+	url = https://github.com/MatthewScholefield/docker-compose-jsonnet.git

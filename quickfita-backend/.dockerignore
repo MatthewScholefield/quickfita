@@ -1,0 +1,8 @@
+# Warning: Dockerfile.dockerignore is not used in development mounted volume
+**/__pycache__/
+**/.git/
+**/.env
+**/.venv/
+**/*.egg-info/
+**/.pytest_cache/
+**/.idea/
