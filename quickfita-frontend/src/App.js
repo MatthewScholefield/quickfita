@@ -111,15 +111,11 @@ MainPageContent.propTypes = {
 export default function App() {
   const [searchParams, _] = useSearchParams();
   const [urlTemplate, setUrlTemplate] = useCookie('urlTemplate', '#');
-  for (const [key, value] of searchParams) {
-    console.log("VVV", key, value);
-  }
-  console.log("ZZZJ", urlTemplate);
 
   const newUrlTemplate = searchParams.get("urlTemplate");
   useEffect(() => {
     if (newUrlTemplate && newUrlTemplate.length > 0) {
-      setUrlTemplate(newUrlTemplate);
+      setUrlTemplate(newUrlTemplate, { days: 10 * 365 });
     }
   }, [newUrlTemplate])
   return <>
