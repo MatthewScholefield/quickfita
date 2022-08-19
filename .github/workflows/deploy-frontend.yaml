@@ -1,0 +1,32 @@
+name: Github Page Deploy Frontend Workflow
+
+on:
+  push:
+    paths:
+    - 'quickfita-frontend/**'
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./quickfita-frontend
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - run: yarn
+      - run: yarn build
+        env:
+          REACT_APP_BACKEND_URL: https://api.quickfita.us.to
+      - name: Deploy
+        uses: crazy-max/ghaction-github-pages@v1
+        with:
+          target_branch: gh-pages
+          build_dir: build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
