@@ -62,11 +62,28 @@ const ErrorState = () => {
 };
 const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8077';
 
+const ResultCard = ({ result }) => {
+  const resultBgColor = useColorModeValue('gray.30', 'gray.800');
+  const resultBgColorHover = useColorModeValue('gray.50', 'gray.700');
+  return <Center>
+    <Box w={['100%', '60%', '100%', '100%', '100%']} bg={resultBgColor} rounded="md"
+      boxShadow={"sm"}
+      _hover={{ bg: resultBgColorHover }}
+      borderWidth="1px" p={4}>
+
+      <Heading fontSize='lg'>{result.title}</Heading >
+      <Text mb={4} mt={2}>{result.overview}</Text>
+      {result.poster_path ? <Image src={'https://image.tmdb.org/t/p/w500' + result.poster_path} borderRadius={8} /> : <></>}
+    </Box>
+  </Center>
+};
+ResultCard.propTypes = {
+  result: PropTypes.object
+};
+
 const MainPageContent = ({ urlTemplate }) => {
   const [searchState, setSearchState] = useState('no-query');
   const [results, setResults] = useState([]);
-  const resultBgColor = useColorModeValue('gray.30', 'gray.800');
-  const resultBgColorHover = useColorModeValue('gray.50', 'gray.700');
   return <>
     <SearchBar onSubmit={query => fetch(
       backendUrl + '/search-all?' + new URLSearchParams({
@@ -80,7 +97,7 @@ const MainPageContent = ({ urlTemplate }) => {
     })} />
     {searchState === 'error' ? <ErrorState /> : results.length === 0 && searchState == 'queried' ? <EmptyState /> : <SimpleGrid columns={[1, 1, 2, 3, 3, 4]} spacing={4} mt={4}>
       {results.map(result =>
-        <Link
+        !urlTemplate ? <ResultCard key={result.id} result={result} /> : <Link
           key={result.id}
           _hover={{
             textDecoration: 'none'
@@ -88,17 +105,7 @@ const MainPageContent = ({ urlTemplate }) => {
           href={urlTemplate.replace("{media_type}", result.media_type).replace("{tmdb_id}", result.id).replace("{season}", "1").replace("{episode}", "1")}
           isExternal={true}
         >
-          <Center>
-            <Box key={results.id} w={['100%', '60%', '100%', '100%', '100%']} bg={resultBgColor} rounded="md"
-              boxShadow={"sm"}
-              _hover={{ bg: resultBgColorHover }}
-              borderWidth="1px" p={4}>
-
-              <Heading fontSize='lg'>{result.title}</Heading >
-              <Text mb={4} mt={2}>{result.overview}</Text>
-              {result.poster_path ? <Image src={'https://image.tmdb.org/t/p/w500' + result.poster_path} borderRadius={8} /> : <></>}
-            </Box>
-          </Center>
+          <ResultCard result={result} />
         </Link>
       )}
     </SimpleGrid>}
@@ -110,7 +117,7 @@ MainPageContent.propTypes = {
 
 export default function App() {
   const [searchParams, _] = useSearchParams();
-  const [urlTemplate, setUrlTemplate] = useCookie('urlTemplate', '#');
+  const [urlTemplate, setUrlTemplate] = useCookie('urlTemplate', '');
 
   const newUrlTemplate = searchParams.get("urlTemplate");
   useEffect(() => {
