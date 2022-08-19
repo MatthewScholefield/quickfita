@@ -20,8 +20,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 const Links = [
-  { label: 'TV Shows', href: '#/tv-shows' },
-  { label: 'Movies', href: '#/movies' }
+  { label: 'TV Shows', href: '#' },
+  { label: 'Movies', href: '#' }
 ];
 
 const NavLink = ({ href, children }) => (
@@ -55,7 +55,7 @@ export default function Navbar() {
         onClick={isOpen ? onClose : onOpen}
       />
       <HStack spacing={8} alignItems={'center'}>
-        <Box>Quickfita</Box>
+        <Box><Link href="#" _hover={{ textDecoration: 'none' }}>Quickfita</Link></Box>
         <HStack
           as={'nav'}
           spacing={4}
