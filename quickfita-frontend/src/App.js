@@ -85,7 +85,7 @@ const MainPageContent = ({ urlTemplate }) => {
           _hover={{
             textDecoration: 'none'
           }}
-          href={urlTemplate.replace("{media_type}", result.media_type).replace("{tmdb_id}", result.id)}
+          href={urlTemplate.replace("{media_type}", result.media_type).replace("{tmdb_id}", result.id).replace("{season}", "1").replace("{episode}", "1")}
           isExternal={true}
         >
           <Center>
