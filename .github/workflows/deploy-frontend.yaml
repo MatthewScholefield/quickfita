@@ -5,6 +5,7 @@ on:
     paths:
     - 'quickfita-frontend/**'
     branches: [main]
+  workflow_dispatch: {}
 
 jobs:
   deploy:
