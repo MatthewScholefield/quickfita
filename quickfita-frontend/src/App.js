@@ -116,13 +116,14 @@ MainPageContent.propTypes = {
 };
 
 export default function App() {
-  const [searchParams, _] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [urlTemplate, setUrlTemplate] = useCookie('urlTemplate', '');
 
   const newUrlTemplate = searchParams.get("urlTemplate");
   useEffect(() => {
     if (newUrlTemplate && newUrlTemplate.length > 0) {
       setUrlTemplate(newUrlTemplate, { days: 10 * 365 });
+      setSearchParams(new URLSearchParams());
     }
   }, [newUrlTemplate])
   return <>
