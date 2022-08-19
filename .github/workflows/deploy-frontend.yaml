@@ -23,6 +23,8 @@ jobs:
       - run: yarn build
         env:
           REACT_APP_BACKEND_URL: https://api.quickfita.us.to
+      - name: Configure domain
+        run: echo "quickfita.us.to" > build/CNAME
       - name: Deploy
         uses: crazy-max/ghaction-github-pages@v1
         with:
