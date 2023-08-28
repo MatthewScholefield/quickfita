@@ -1,43 +1,5 @@
 local dc = import 'libs/docker-compose-jsonnet/dc.libsonnet';
 
-// url can be http://localhost:1234 but 1234 needs to be added to openPorts
-local portLabelsConfig(url, containerPort) = dc.labelAttributes({
-  caddy: url,
-  'caddy.reverse_proxy': '{{upstreams %s}}' % [containerPort],
-  'caddy.header': '/* { -Server }',
-});
-
-local makeCaddyDeployment(openPorts) = (
-  dc.Deployment(
-    services={
-      caddy: dc.Service({
-        image: 'lucaslorentz/caddy-docker-proxy:2.7.1-alpine',
-        volumes: [
-          '/var/run/docker.sock:/var/run/docker.sock',
-          'caddy-data-volume:/data',
-          'caddy-config-volume:/config',
-        ],
-        deploy: dc.DeploymentConfig({
-          placement: { constraints: ['node.role == manager'] },
-          update_config: {
-            order: 'stop-first',
-            failure_action: 'rollback',
-            delay: '3s',
-          },
-          rollback_config: {
-            parallelism: 0,
-            order: 'stop-first',
-          },
-        }),
-        restart: 'unless-stopped',
-      } + dc.bindOrExpose(openPorts, bindToHost=dc.usingSwarm)),
-    },
-    volumes=[
-      'caddy-data-volume',
-      'caddy-config-volume',
-    ],
-  )
-);
 
 local makeFrontendDeployment(frontendUrl, backendUrl) = dc.Deployment(
   services={
@@ -56,7 +18,7 @@ local makeFrontendDeployment(frontendUrl, backendUrl) = dc.Deployment(
         '/dev/null:/quickfita-frontend/.env.local',
       ],
       command: 'yarn start',
-    } + portLabelsConfig(frontendUrl, 3022)),
+    } + dc.apps.caddyProxyConfig(frontendUrl, 3022)),
   }
 );
 
@@ -72,7 +34,7 @@ local makeBackendDeployment(backendUrl, tmdbApiKey) = dc.Deployment(
         TMDB_API_KEY: tmdbApiKey,
       }),
       healthcheck: dc.HealthCheck("python3 -c 'import requests; exit(not \"detail\" in requests.get(\"http://localhost:8077\").json())'"),
-    } + portLabelsConfig(backendUrl, 8077)),
+    } + dc.apps.caddyProxyConfig(backendUrl, 8077)),
   },
 );
 
@@ -90,11 +52,12 @@ local makeBackendDeployment(backendUrl, tmdbApiKey) = dc.Deployment(
     tmdbApiKey,  // "abc123"
 
     openPorts=[3022, 8077],  // Public ports to open in reverse proxy. Use 80,443 for https. Use null to remove caddy
+    defaultNetwork='quickfita-%s_default' % [env], // May change based on platform. Identify with `docker network ls`
   ): (
     dc.composeFileDeployments([i for i in [
       makeBackendDeployment(backendUrl, tmdbApiKey),
       if env == 'dev' then makeFrontendDeployment(frontendUrl, backendUrl),
-      if openPorts != null then makeCaddyDeployment(openPorts),
+      if openPorts != null then dc.apps.caddyDeployment(openPorts, networks=[defaultNetwork]),
     ] if i != null])
   ),
 }

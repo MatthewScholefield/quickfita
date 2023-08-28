@@ -23,7 +23,7 @@ setup(
         'uvicorn-loguru-integration',
         'loguru',
         'uvicorn',
-        'pydantic[dotenv]',
+        'pydantic[dotenv]<2.0.0',
     ],
     entry_points={
         'console_scripts': ['quickfita=quickfita.__main__:main'],
