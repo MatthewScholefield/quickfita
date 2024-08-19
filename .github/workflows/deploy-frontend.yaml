@@ -25,7 +25,6 @@ jobs:
           REACT_APP_BACKEND_URL: https://api.quickfita.us.to
       - name: Apply site config
         run: |-
-          echo "quickfita.us.to" > build/CNAME
           touch build/.nojekyll
       - name: Deploy
         uses: crazy-max/ghaction-github-pages@v1
