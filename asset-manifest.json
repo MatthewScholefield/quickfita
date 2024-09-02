@@ -1,0 +1,10 @@
+{
+  "files": {
+    "main.js": "/quickfita/static/js/main.c9e00a3a.js",
+    "index.html": "/quickfita/index.html",
+    "main.c9e00a3a.js.map": "/quickfita/static/js/main.c9e00a3a.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.c9e00a3a.js"
+  ]
+}
