@@ -22,7 +22,7 @@ jobs:
       - run: yarn
       - run: yarn build
         env:
-          REACT_APP_BACKEND_URL: https://api.quickfita.us.to
+          REACT_APP_BACKEND_URL: https://api.quickfita.ne1.co
       - name: Apply site config
         run: |-
           touch build/.nojekyll
