@@ -14,12 +14,13 @@ local makeFrontendDeployment(frontendUrl, backendUrl) = dc.Deployment(
       expose: ['3022'],
       volumes: [
         './quickfita-frontend/:/quickfita-frontend/',
-        '/quickfita-frontend/node_modules/',
+        'quickfita-frontend-node-modules:/quickfita-frontend/node_modules/',
         '/dev/null:/quickfita-frontend/.env.local',
       ],
       command: 'yarn start',
     } + dc.apps.caddyProxyConfig(frontendUrl, 3022)),
-  }
+  },
+  volumes=['quickfita-frontend-node-modules'],
 );
 
 local makeBackendDeployment(backendUrl, tmdbApiKey) = dc.Deployment(
